@@ -9,13 +9,13 @@
 namespace Magento\Framework\Mail\Template;
 
 use Magento\Framework\App\TemplateTypesInterface;
-use Magento\Framework\Mail\Message;
-use Magento\Framework\Mail\MessageInterface;
 use Magento\Framework\Mail\TransportInterfaceFactory;
+use Magento\Framework\Mail\TransportMessageInterface;
 use Magento\Framework\ObjectManagerInterface;
 
 class TransportBuilder
 {
+
     /**
      * Template Identifier
      *
@@ -68,7 +68,7 @@ class TransportBuilder
     /**
      * Message
      *
-     * @var \Magento\Framework\Mail\Message
+     * @var \Magento\Framework\Mail\TransportMessage
      */
     protected $message;
 
@@ -86,14 +86,14 @@ class TransportBuilder
 
     /**
      * @param FactoryInterface $templateFactory
-     * @param MessageInterface $message
+     * @param TransportMessageInterface $message
      * @param SenderResolverInterface $senderResolver
      * @param ObjectManagerInterface $objectManager
      * @param TransportInterfaceFactory $mailTransportFactory
      */
     public function __construct(
         FactoryInterface $templateFactory,
-        MessageInterface $message,
+        TransportMessageInterface $message,
         SenderResolverInterface $senderResolver,
         ObjectManagerInterface $objectManager,
         TransportInterfaceFactory $mailTransportFactory
@@ -218,8 +218,7 @@ class TransportBuilder
     }
 
     /**
-     * Creates a Zend_Mime_Part attachment and attaches it to the current message scope.
-     * Attachment is automatically added to the mail object after creation.
+     * Adds an attachment to the current message scope.
      *
      * @param  string $body
      * @param  string $mimeType
@@ -230,9 +229,9 @@ class TransportBuilder
      */
     public function addAttachment(
         $body,
-        $mimeType = \Zend_Mime::TYPE_OCTETSTREAM,
-        $disposition = \Zend_Mime::DISPOSITION_ATTACHMENT,
-        $encoding = \Zend_Mime::ENCODING_BASE64,
+        $mimeType = TransportMessageInterface::TYPE_OCTETSTREAM,
+        $disposition = TransportMessageInterface::DISPOSITION_ATTACHMENT,
+        $encoding = TransportMessageInterface::ENCODING_BASE64,
         $filename = null
     ) {
         $this->message->createAttachment($body, $mimeType, $disposition, $encoding, $filename);
